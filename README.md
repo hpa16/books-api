@@ -1,6 +1,4 @@
-<p align="center">
-	<img src="https://raw.githubusercontent.com/Project-Books/book-project/master/media/banner/book_project_newlogo_2x.png" alt="Logo"/>
-</p>
+![books-api-logo](https://user-images.githubusercontent.com/11173328/147469184-91048518-e48a-47d7-b8f5-01a478c33f46.png)
 
 <p align="center">
   <a href="https://github.com/Project-Books/books-api/actions/workflows/build.yml">
@@ -18,6 +16,7 @@
 
 GraphQL books API made using Spring Boot and [DGS](https://netflix.github.io/dgs/). This is a sibling project of the [Book Project](https://github.com/Project-Books/book-project).
 
+
 ## Setup
 
 Prerequisites: 
@@ -29,14 +28,37 @@ Prerequisites:
 
 Recommended IntelliJ plugin: [JS GraphQL](https://plugins.jetbrains.com/plugin/8097-js-graphql)
 
+
+## Before running the app
+
+### Buildkit
+
+As this Dockerfile caches the projects maven dependencies, please ensure docker buildkit is supported (Docker v18.09+) and is enabled.
+
+Use the following command to see if the environment variable is set.
+
+```bash
+echo $DOCKER_BUILDKIT
+``` 
+
+If the result returns a blank string or an 0 please use the following command to set it:
+
+```bash
+export DOCKER_BUILDKIT=1
+``` 
+
 ## Running the app
 
 1. Import as a Maven project into your favourite IDE
-2. Start the PostgreSQL Database or run the docker-compose file `docker-compose up -d` (you may need to add `sudo` to this command) 
-   - If using macOS or Windows, you'll need to first ensure Docker Desktop is running 
-3. Run `BooksApiApplication.java`
-   - You may need to build the project first if you're seeing 'com.acme' (DGS codegen) errors
-4. Go to `localhost:8080/graphiql`
+1. Ensure Docker Desktop is running if you are using macOS or Windows. If using Linux, ensure the Docker daemon is running
+1. Build the docker image:
+   - With default values: `docker-compose build booksapi` , or
+   - with a custom mvn goal(s), e.g. `docker-compose build --build-arg mvn_arg="clean package -DskipTests" booksapi` 
+1. Run the docker-compose file: `docker-compose up -d`
+   - if you wish to view the output use `docker logs -f booksapi`
+   - alternatively use `docker-compose up db booksapi` to launch the containers interactively
+3. Wait for the server to start (macOS and Windows: you can check this on Docker desktop for the `booksapi` container if you used the detached flag earlier)
+4. Go to `http://localhost:8082/graphiql`
 
 Sample query:
 ```graphql
